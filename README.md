@@ -1,4 +1,4 @@
-# AI Workflow Reliability Engine — v2.0
+﻿# AI Workflow Reliability Engine — v2.0
 
 ## The Problem With AI in Operations
 
@@ -235,10 +235,12 @@ ai-workflow-reliability-engine/
 
 ## System Context
 
-This project is part of a larger AI decision system:
+Part of a five-engine AI decision system, built in sequence:
 
-- Reliability Engine → prevents invalid AI outputs from entering workflows  
-- **[Decision Engine](https://github.com/kobescak-kristian/ai-decision-engine-feedback)** → tracks outcomes and evaluates decision correctness  
-- **[Impact Engine](https://github.com/kobescak-kristian/ai-impact-decision-intelligence-engine)** → measures financial impact and optimizes thresholds  
+- **Reliability Engine** → prevents invalid AI outputs from entering workflows *(this system)*
+- **[Decision Engine](https://github.com/kobescak-kristian/ai-decision-engine)** → tracks outcomes and evaluates whether decisions were correct
+- **[Impact Engine](https://github.com/kobescak-kristian/ai-impact-decision-intelligence-engine)** → measures financial impact and tunes thresholds
+- **[Execution Engine](https://github.com/kobescak-kristian/ai-execution-engine)** → runs the workflow deterministically and recommends improvements
+- **[Context Engine](https://github.com/kobescak-kristian/ai-context-engine)** → grounds decisions in retrieved precedent and explains them
 
-→ Complete system: validation → evaluation → financial impact
+→ Five standalone engines covering validation, decision evaluation, financial impact, workflow execution, and retrieval-grounded decision support.
