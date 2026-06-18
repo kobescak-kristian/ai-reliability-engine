@@ -1,4 +1,4 @@
-﻿# AI Workflow Reliability Engine — v2.0
+﻿# AI Reliability Engine — v2.0
 
 ## The Problem With AI in Operations
 
@@ -197,7 +197,7 @@ Complete — v2.0
 High-level structure of the system:
 
 ```
-ai-workflow-reliability-engine/
+ai-reliability-engine/
 │
 ├── main.py                  # Entry point (run full pipeline locally)
 ├── api.py                   # FastAPI endpoints (/qualify, /qualify/batch, /stats, /audit, /alerts, /health)
