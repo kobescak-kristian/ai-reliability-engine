@@ -161,7 +161,7 @@ business workflows.
 
 ## Related Projects
 
-- Decision Engine → [https://github.com/kobescak-kristian/ai-decision-engine-feedback]
+- Decision Engine → [https://github.com/kobescak-kristian/ai-decision-engine]
 
 Generates structured decisions that this system validates and routes.
 
@@ -237,10 +237,10 @@ ai-reliability-engine/
 
 Part of a five-engine AI decision system:
 
-- **Reliability Engine** - prevents invalid AI outputs from entering workflows *(this system)*
-- **[Decision Engine](https://github.com/kobescak-kristian/ai-decision-engine)** - tracks outcomes and evaluates whether decisions were correct
-- **[Impact Engine](https://github.com/kobescak-kristian/ai-impact-scoring-engine)** - measures the financial impact of decisions and tunes thresholds
-- **[Execution Engine](https://github.com/kobescak-kristian/ai-execution-engine)** - executes the workflow deterministically and recommends improvements
-- **[Context Engine](https://github.com/kobescak-kristian/ai-context-engine)** - grounds decisions in retrieved precedent and explains them
+- **AI Reliability Engine** - prevents invalid AI outputs from entering workflows *(this system)*
+- **[AI Decision Engine](https://github.com/kobescak-kristian/ai-decision-engine)** - tracks outcomes and evaluates whether decisions were correct
+- **[AI Impact Scoring Engine](https://github.com/kobescak-kristian/ai-impact-scoring-engine)** - measures the financial impact of decisions and tunes thresholds
+- **[AI Execution Engine](https://github.com/kobescak-kristian/ai-execution-engine)** - executes the workflow and recommends improvements
+- **[AI Context Engine](https://github.com/kobescak-kristian/ai-context-engine)** - grounds decisions in retrieved precedent and explains them
 
 Complete system: validation → evaluation → financial impact → grounded explanation → execution
