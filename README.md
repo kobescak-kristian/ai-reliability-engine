@@ -50,7 +50,7 @@ and malformed records. Fallback triggered on 2 records —
 both handled without system failure.
 
 ## Architecture
-![AI Workflow Reliability Engine Overview](architecture_v2.png)
+![AI Reliability Engine Overview](architecture_v2.png)
 
 
 ## Business Value
