@@ -235,12 +235,12 @@ ai-reliability-engine/
 
 ## System Context
 
-Part of a five-engine AI decision system, built in sequence:
+Part of a five-engine AI decision system:
 
-- **Reliability Engine** → prevents invalid AI outputs from entering workflows *(this system)*
-- **[Decision Engine](https://github.com/kobescak-kristian/ai-decision-engine)** → tracks outcomes and evaluates whether decisions were correct
-- **[Impact Engine](https://github.com/kobescak-kristian/ai-impact-decision-intelligence-engine)** → measures financial impact and tunes thresholds
-- **[Execution Engine](https://github.com/kobescak-kristian/ai-execution-engine)** → runs the workflow deterministically and recommends improvements
-- **[Context Engine](https://github.com/kobescak-kristian/ai-context-engine)** → grounds decisions in retrieved precedent and explains them
+- **Reliability Engine** - prevents invalid AI outputs from entering workflows *(this system)*
+- **[Decision Engine](https://github.com/kobescak-kristian/ai-decision-engine)** - tracks outcomes and evaluates whether decisions were correct
+- **[Impact Engine](https://github.com/kobescak-kristian/ai-impact-scoring-engine)** - measures the financial impact of decisions and tunes thresholds
+- **[Execution Engine](https://github.com/kobescak-kristian/ai-execution-engine)** - executes the workflow deterministically and recommends improvements
+- **[Context Engine](https://github.com/kobescak-kristian/ai-context-engine)** - grounds decisions in retrieved precedent and explains them
 
-→ Five standalone engines covering validation, decision evaluation, financial impact, workflow execution, and retrieval-grounded decision support.
+Complete system: validation → evaluation → financial impact → grounded explanation → execution
