@@ -1,5 +1,5 @@
 """
-AI Workflow Reliability Engine — v2.0
+AI Reliability Engine — v2.0
 ======================================
 Pipeline: Input → Sanitise → AI → Validate → Fallback → Route → Notify → Sheets → Persist → Output
 """
@@ -20,7 +20,7 @@ from utils.sheets import write_result, ensure_tabs
 
 
 def run_pipeline(input_path: str, output_path: str | None = None) -> list[dict]:
-    logger.section("AI WORKFLOW RELIABILITY ENGINE v2.0 — START")
+    logger.section("AI RELIABILITY ENGINE v2.0 — START")
 
     for k, v in config.summary().items():
         logger.info(f"  {k}: {v}")
@@ -155,7 +155,7 @@ def _write_output(results: list[dict], output_path: str):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="AI Workflow Reliability Engine")
+    parser = argparse.ArgumentParser(description="AI Reliability Engine")
     parser.add_argument("--input",  default="data/sample_input.json")
     parser.add_argument("--output", default="data/results.json")
     args = parser.parse_args()

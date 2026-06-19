@@ -174,7 +174,7 @@ def _send_email(alert: dict):
       {errors_html}
       <hr/>
       <p style="color: #888; font-size: 12px;">
-        AI Workflow Reliability Engine — automated alert
+        AI Reliability Engine — automated alert
       </p>
     </body></html>
     """

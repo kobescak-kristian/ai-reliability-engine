@@ -1,5 +1,5 @@
 """
-FastAPI wrapper — AI Workflow Reliability Engine v2.0
+FastAPI wrapper — AI Reliability Engine v2.0
 
 Endpoints:
   POST /qualify                      — Single lead, full pipeline
@@ -35,7 +35,7 @@ from utils.notifier import (
 init_db()
 
 app = FastAPI(
-    title="AI Workflow Reliability Engine",
+    title="AI Reliability Engine",
     description="Production-style validation, fallback and routing layer for AI-classified leads.",
     version="2.0.0"
 )

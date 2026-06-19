@@ -126,6 +126,7 @@ boundaries, data flow, fallback paths, and integration points
 | `GET /audit/{lead_id}` | Decision history for specific lead |
 | `GET /alerts` | Pending manual review queue |
 | `GET /health` | DB connection + config state |
+| `PATCH /alerts/{lead_id}/acknowledge` | Mark a pending manual review alert as acknowledged |
 
 ## Stack
 Python 3.11+ · Pydantic v2 · OpenAI API (gpt-4o-mini) · 
@@ -171,14 +172,7 @@ business workflows.
 
 ## Related Projects
 
-- Decision Engine → [https://github.com/kobescak-kristian/ai-decision-engine]
-
-Generates structured decisions that this system validates and routes.
-
-This system ensures that AI decisions are:
-- valid
-- consistent
-- safe to execute
+- **[AI Decision Engine](https://github.com/kobescak-kristian/ai-decision-engine)** — generates structured decisions that this system validates and routes
 
 ## Known Limitations
 **Single retry:** No exponential backoff — one retry only.
@@ -213,7 +207,8 @@ ai-reliability-engine/
 ├── api.py                   # FastAPI endpoints (/qualify, /qualify/batch, /stats, /audit, /alerts, /health)
 ├── requirements.txt
 ├── .env.example             # Environment variable template
-├── architecture.png         # System diagram
+├── architecture_v2.png          # Business/executive architecture overview
+├── architecture-v2-diagram.png  # Detailed technical architecture
 │
 ├── config/
 │   └── settings.py          # Thresholds, credentials, and runtime configuration
