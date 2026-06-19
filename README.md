@@ -50,6 +50,12 @@ and malformed records. Fallback triggered on 2 records —
 both handled without system failure.
 
 ## Architecture
+
+End-to-end view of how inputs move through sanitisation, AI
+classification, validation, fallback, routing, and downstream
+outputs. Shows where each failure mode is caught before it reaches
+operations.
+
 ![AI Reliability Engine Overview](architecture_v2.png)
 
 
@@ -90,7 +96,11 @@ both handled without system failure.
 
 ## Detailed Architecture (Technical View)
 
-![Architecture](architecture-v2-diagram.png)
+Component-level breakdown of the 8-stage pipeline: module
+boundaries, data flow, fallback paths, and integration points
+(OpenAI, SQLite, Google Sheets, Slack/email).
+
+![AI Reliability Engine — Technical Architecture](architecture-v2-diagram.png)
 
 ## Routing Logic
 
