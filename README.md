@@ -46,8 +46,8 @@ Across 51 test records including deliberate edge cases:
 Supporting evidence: validation caught invalid category, 
 out-of-range confidence (1.5), and empty required field. 
 Sanitiser rejected HTML injection, whitespace-only input, 
-and malformed records. Fallback triggered on 2 records — 
-both handled without system failure.
+and malformed records. Fallback triggered on 3 records — 
+all handled without system failure.
 
 ## Architecture
 
