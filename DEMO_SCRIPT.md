@@ -1,4 +1,4 @@
-# Demo Checklist — AI Reliability Engine v2.0
+# Demo Script — AI Reliability Engine v2.0
 
 ## 1. Demo Purpose
 
