@@ -152,8 +152,8 @@ indexed queries and cross-run lead history without
 external infrastructure.
 
 **4-tab Google Sheets CRM:** Action Queue (newest on top), 
-Sales, Review, Archive. Repeat leads detected and flagged 
-automatically.
+Sales History, Review History, Archive. Repeat leads detected 
+and flagged automatically.
 
 ## Why This Project Matters
 
