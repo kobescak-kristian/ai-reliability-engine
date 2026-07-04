@@ -98,7 +98,11 @@ def process_lead(lead: LeadRequest, run_id: str) -> LeadResponse:
     fallback_action = FallbackAction.NONE
     if not validation_result.valid:
         ai_output, fallback_action = fallback.handle_fallback(record, validation_result)
-        validation_result = validator.validate(ai_output, record.id)
+        # Confirm the fallback output, but never overwrite validation_result:
+        # persisted/alerted validation reflects the ORIGINAL AI output.
+        fallback_validation = validator.validate(ai_output, record.id)
+        if not fallback_validation.valid:
+            logger.error(f"[{record.id}] Fallback output failed validation: {fallback_validation.errors}")
 
     final_decision = router.route(ai_output, fallback_action, record.id)
     processing_ms  = round((time.time() - t_start) * 1000, 2)
@@ -129,13 +133,18 @@ def process_lead(lead: LeadRequest, run_id: str) -> LeadResponse:
     if final_decision == FinalDecision.MANUAL_REVIEW:
         reason = "Validation failed after retry" if fallback_action == FallbackAction.MANUAL_REVIEW_FLAGGED \
             else f"category={result_dict['ai_output']['category']}, confidence={result_dict['ai_output']['confidence']:.2f}"
-        notify_manual_review(
-            lead_id=record.id,
-            reason=reason,
-            fallback_action=fallback_action.value,
-            run_id=run_id,
-            validation_errors=validation_result.errors if not validation_result.valid else []
-        )
+        # The record is already persisted — a notification failure must not
+        # surface as a 500, or clients would retry and duplicate the decision.
+        try:
+            notify_manual_review(
+                lead_id=record.id,
+                reason=reason,
+                fallback_action=fallback_action.value,
+                run_id=run_id,
+                validation_errors=validation_result.errors if not validation_result.valid else []
+            )
+        except Exception as e:
+            logger.error(f"Notification failed for {record.id} (record already persisted): {e}")
 
     return LeadResponse(
         id=record.id,

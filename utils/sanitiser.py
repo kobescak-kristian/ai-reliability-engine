@@ -27,11 +27,12 @@ def sanitise(raw_text: str, record_id: str) -> str | None:
 
     text = raw_text
 
-    # Strip HTML tags
-    text = re.sub(r"<[^>]+>", " ", text)
+    # Remove script/style blocks INCLUDING their content — must run before
+    # generic tag stripping, which would destroy the closing tags this needs
+    text = re.sub(r"<(script|style)[^>]*>.*?</(script|style)>", " ", text, flags=re.DOTALL | re.IGNORECASE)
 
-    # Remove script/style content
-    text = re.sub(r"<(script|style)[^>]*>.*?</(script|style)>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    # Strip remaining HTML tags
+    text = re.sub(r"<[^>]+>", " ", text)
 
     # Remove control characters (except newline and tab)
     text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)

@@ -1,6 +1,15 @@
 import sys
 from datetime import datetime
 
+# Windows consoles default to cp1252, which cannot encode log glyphs like →.
+# Reconfigure to UTF-8 with replacement so logging can never crash the pipeline.
+for _stream in (sys.stdout, sys.stderr):
+    if _stream is not None and hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
 
 class PipelineLogger:
     RESET  = "\033[0m"

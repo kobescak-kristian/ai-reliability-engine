@@ -108,7 +108,8 @@ def write_to_action_queue(result: dict, run_id: str, alert_reason: str = ""):
         ]
 
         # Insert at row 2 — pushes everything down, header stays at row 1
-        ws.insert_row(row, index=2, value_input_option="USER_ENTERED")
+        # RAW: never let lead-supplied text be evaluated as a spreadsheet formula
+        ws.insert_row(row, index=2, value_input_option="RAW")
 
         if is_repeat:
             logger.info(f"[{inp.get('id')}] Action Queue — repeat lead inserted at top")
@@ -186,7 +187,7 @@ def append_to_history(result: dict, run_id: str, alert_reason: str = ""):
         else:
             return
 
-        ws.append_row(row, value_input_option="USER_ENTERED")
+        ws.append_row(row, value_input_option="RAW")
         logger.debug(f"[{inp.get('id')}] History → {decision}")
 
     except Exception as e:

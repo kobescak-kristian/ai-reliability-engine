@@ -47,7 +47,11 @@ def run_pipeline(input_path: str, output_path: str | None = None) -> list[dict]:
         if not validation_result.valid:
             logger.warning(f"[{record.id}] Validation failed — triggering fallback")
             ai_output, fallback_action = fallback.handle_fallback(record, validation_result)
-            validation_result = validator.validate(ai_output, record.id)
+            # Confirm the fallback output, but never overwrite validation_result:
+            # persisted/alerted validation reflects the ORIGINAL AI output.
+            fallback_validation = validator.validate(ai_output, record.id)
+            if not fallback_validation.valid:
+                logger.error(f"[{record.id}] Fallback output failed validation: {fallback_validation.errors}")
 
         final_decision = router.route(ai_output, fallback_action, record.id)
         processing_ms  = round((time.time() - t_start) * 1000, 2)
@@ -143,7 +147,10 @@ def _print_summary(results: list[dict], run_id: str):
     logger.info(f"Avg time        : {avg_ms}ms per record")
     logger.success(f"Persisted       → {config.DB_PATH}")
     logger.success(f"Alerts queue    → {config.ALERTS_PATH}")
-    logger.success(f"Sheets updated  → all 4 tabs")
+    if config.sheets_enabled():
+        logger.success(f"Sheets updated  → all 4 tabs")
+    else:
+        logger.info("Sheets disabled — skipped")
 
 
 def _write_output(results: list[dict], output_path: str):
