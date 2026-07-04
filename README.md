@@ -1,6 +1,6 @@
 ﻿# AI Reliability Engine — v2.0
 
-## The Problem With AI in Operations
+## Problem
 
 AI classification is useful. It is also probabilistic — the 
 model can return the wrong category, a confidence score above 
@@ -12,7 +12,7 @@ notices.
 Most AI workflow demos stop at classification. This system 
 handles what happens when the model is wrong.
 
-## What This System Does
+## Solution
 
 A validation and fallback layer that sits between an AI 
 classifier and your operational systems. Every AI response 
@@ -195,6 +195,16 @@ webhook input source.*
 
 ## Status
 Complete — v2.0
+
+## Version Log
+
+| Version | Date | Change |
+|---|---|---|
+| v2.0 | 2026-04-22 | Initial release — 8-stage pipeline, validation, fallback, routing, Sheets CRM, Slack/email alerts |
+| v2.0 | 2026-04-23 | Architecture diagrams and repository structure documented |
+| v2.0 | 2026-06-17 | System Context expanded to five-engine system |
+| v2.0 | 2026-06-19 | Added ADR-001, eval results, assurance one-pager, runbook |
+| v2.0 | 2026-07-04 | Removed SYSTEM_WALKTHROUGH.md and RUNBOOK.md per ARTIFACT_STANDARD v2.1 (ADR-002); traces merged into TECHNICAL_OWNERSHIP_GUIDE |
 
 ## Repository Structure
 

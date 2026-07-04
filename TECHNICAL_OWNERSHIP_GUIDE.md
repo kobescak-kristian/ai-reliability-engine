@@ -2,8 +2,8 @@
 
 > Interview preparation and technical ownership reference.
 > Connects README claims to code structure.
-> For code-running instructions see RUNBOOK.md.
-> For system narrative see SYSTEM_WALKTHROUGH.md.
+> For code-running instructions see README.md.
+> Worked examples (happy path / failure path) are below in this document.
 
 ---
 
@@ -176,6 +176,55 @@ All three exhaust the single retry and receive the safe default. This is intenti
 **Threshold:** `config.CONFIDENCE_THRESHOLD`, default `0.60`, set via env var. No code change needed to adjust it.
 
 **Why this is operationally safer than direct AI action:** The AI never decides what happens. It only classifies. The router maps that classification to a business action using a rule table a non-technical stakeholder can read and verify. Changing the routing logic does not require touching the AI call or the validation layer. The confidence threshold separates "AI is probably right" from "AI is uncertain" without suppressing the uncertain case — it escalates it.
+
+---
+
+## Worked Examples: Happy Path and Failure Path
+
+**Happy Path — `lead_001`**
+
+Input:
+```
+"Enterprise client requested a demo of our full platform.
+ Budget confirmed at 50,000 EUR annually.
+ CFO and CTO both attending the call."
+```
+
+Pipeline trace:
+1. Sanitiser: input is clean, no transformation needed
+2. AI Processor: returns `{category: "high_value", confidence: 0.95, reason: "Enterprise demo with confirmed 50k EUR annual budget and C-suite attendance."}`
+3. Validator: all fields valid — passes
+4. Router: `high_value` + `confidence 0.95 ≥ 0.60` → `send_to_sales`
+5. Notify: no alert (not `manual_review`)
+6. Google Sheets: written to Action Queue tab and Sales tab
+7. SQLite: decision persisted with run ID
+
+Result: `send_to_sales`. No human intervention required. Decision traceable by lead ID.
+
+**Failure Path — `lead_037`**
+
+Input:
+```
+"Small startup exploring options. Budget under 2,000 EUR total.
+ No specific timeline."
+```
+
+This record is seeded to return an invalid AI response for demo
+reproducibility (controlled via `_force_invalid: "bad_category"` in
+the test set metadata).
+
+Pipeline trace:
+1. Sanitiser: input passes
+2. AI Processor: returns `{category: "maybe_value", confidence: 0.78, reason: "Small startup with limited budget."}`
+3. Validator: `"maybe_value"` not in `{"high_value", "low_value", "unknown"}` → **validation failure**
+4. Fallback Stage 1: retry with strict prompt → same invalid response returned
+5. Fallback Stage 2: retry fails → safe default assigned:
+   `{category: "unknown", confidence: 0.0, reason: "System default — AI output failed validation after retry."}`
+6. Router: `fallback_action == MANUAL_REVIEW_FLAGGED` → `manual_review` (checked before category)
+7. Notify: alert written to `data/alerts.json`; Slack/email dispatched if configured
+8. SQLite: decision persisted with `fallback_action: manual_review_flagged` and `validation_passed: 0`
+
+Result: `manual_review`. No invalid output reached operations. Failure is visible, logged, and alerted.
 
 ---
 
