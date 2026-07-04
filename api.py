@@ -50,9 +50,12 @@ class LeadRequest(BaseModel):
 
     model_config = {
         "json_schema_extra": {
+            # In simulation mode (no API key) responses are keyed by lead ID —
+            # this example uses a recognised ID so it demonstrates a real
+            # classification instead of the unknown-input fallback path.
             "example": {
-                "id": "lead_demo_01",
-                "raw_text": "CFO confirmed 40k EUR budget. CTO and procurement involved. Go-live in 8 weeks.",
+                "id": "lead_001",
+                "raw_text": "Enterprise client requested a demo of our full platform. Budget confirmed at 50,000 EUR annually. CFO and CTO both attending the call.",
                 "metadata": {"source": "web_form", "region": "EU"}
             }
         }

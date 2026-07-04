@@ -43,11 +43,14 @@ Across 51 test records including deliberate edge cases:
 - Full operational loop closed: AI call → validation → 
   routing → Slack alert → Google Sheets CRM → SQLite audit
 
-Supporting evidence: validation caught invalid category, 
-out-of-range confidence (1.5), and empty required field. 
-Sanitiser rejected HTML injection, whitespace-only input, 
-and malformed records. Fallback triggered on 3 records — 
-all handled without system failure.
+Supporting evidence (live run, 2026-07-04): validation caught 
+an invalid category (`maybe_value`), out-of-range confidence 
+(`-0.3`), and an empty required field. The sanitiser stripped 
+HTML and script content from injected input and rejected empty, 
+whitespace-only, and too-short input. Fallback triggered on 
+7 records — 3 forced invalid AI outputs and 4 inputs with no 
+usable AI response — all routed to manual review without 
+system failure.
 
 ## Architecture
 
@@ -72,7 +75,7 @@ operations.
 | Google Sheets CRM | AI output disconnected from operational workflow |
 | Slack + email alerts | Silent manual review queue with no notification |
 
-## How It Works
+## System
 
 8-stage linear pipeline:
 
@@ -87,12 +90,13 @@ operations.
    manual review flag.
 5. **Router** — maps category + confidence + fallback 
    status to final decision
-6. **Notify** — Slack webhook + HTML email on every 
-   manual_review decision
-7. **Google Sheets CRM** — inserts to 4-tab workbook, 
-   newest on top, repeat leads flagged automatically
-8. **Persist** — every decision written to SQLite with 
+6. **Persist** — every decision written to SQLite with 
    run ID for cross-run audit
+7. **Notify** — Slack webhook + HTML email on every 
+   manual_review decision
+8. **Google Sheets CRM** — inserts to 4-tab workbook, 
+   newest on top; repeat leads flagged (CLI runs with 
+   Sheets credentials only)
 
 ## Detailed Architecture (Technical View)
 
@@ -119,8 +123,8 @@ boundaries, data flow, fallback paths, and integration points
 
 | Endpoint | Purpose |
 |---|---|
-| `POST /qualify` | Single lead — full pipeline |
-| `POST /qualify/batch` | Batch up to 50 leads, shared run ID |
+| `POST /qualify` | Single lead — full pipeline except Sheets CRM (CLI only) |
+| `POST /qualify/batch` | Batch up to 50 leads, shared run ID — same Sheets exception |
 | `GET /stats` | Aggregate metrics across all runs |
 | `GET /audit` | Recent decisions from database |
 | `GET /audit/{lead_id}` | Decision history for specific lead |
@@ -141,7 +145,12 @@ are structurally impossible.
 
 **Simulation mode built in:** Full pipeline runs and 
 demonstrates all failure modes without an API key. 
-Reproducible demo including deliberate edge cases.
+Reproducible demo including deliberate edge cases. 
+Simulation responses are keyed by lead ID: any input the 
+simulator does not recognise returns no output, which 
+triggers the fallback path and routes to manual review 
+with the safe default. Classifying new, unseen text 
+requires a live API key.
 
 **Confidence threshold via environment variable:** 
 Configurable per deployment — not hardcoded. Threshold 
@@ -153,7 +162,8 @@ external infrastructure.
 
 **4-tab Google Sheets CRM:** Action Queue (newest on top), 
 Sales History, Review History, Archive. Repeat leads detected 
-and flagged automatically.
+and flagged in the Action Queue — Sheets layer only, so this 
+runs on CLI executions with Sheets credentials configured.
 
 ## Why This Project Matters
 
@@ -189,6 +199,10 @@ API limits. Production upgrade: batch writes with backoff.
 **Simulation retry:** Forced-invalid records always fail 
 retry — intentional for demo reproducibility.
 
+**API skips Sheets:** `POST /qualify` and `POST /qualify/batch` 
+run every stage except the Google Sheets write. The Sheets CRM 
+is written by the CLI path only.
+
 *Production path: PostgreSQL · async task queue · 
 API authentication · exponential backoff · 
 webhook input source.*
@@ -205,6 +219,7 @@ Complete — v2.0
 | v2.0 | 2026-06-17 | System Context expanded to five-engine system |
 | v2.0 | 2026-06-19 | Added ADR-001, eval results, assurance one-pager, runbook |
 | v2.0 | 2026-07-04 | Removed SYSTEM_WALKTHROUGH.md and RUNBOOK.md per ARTIFACT_STANDARD v2.1 (ADR-002); traces merged into TECHNICAL_OWNERSHIP_GUIDE |
+| v2.0 | 2026-07-04 | Audit remediation: fix validation-result persistence, Windows console encoding, sanitiser ordering, Sheets RAW writes; docs re-derived from live run |
 
 ## Repository Structure
 
@@ -219,6 +234,14 @@ ai-reliability-engine/
 ├── .env.example             # Environment variable template
 ├── architecture_v2.png          # Business/executive architecture overview
 ├── architecture-v2-diagram.png  # Detailed technical architecture
+│
+├── ASSURANCE_ONE_PAGER.md   # AI risk/assurance summary for reviewers
+├── DEMO_SCRIPT.md           # Walkthrough script for live demos
+├── TECHNICAL_OWNERSHIP_GUIDE.md # Interview prep + code ownership map
+│
+├── adr/                     # Architecture decision records (capped at 5)
+├── evals/                   # Eval results from live pipeline runs
+├── .githooks/               # ARTIFACT_STANDARD pre-push validator
 │
 ├── config/
 │   └── settings.py          # Thresholds, credentials, and runtime configuration

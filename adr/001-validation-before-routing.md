@@ -86,10 +86,14 @@ directly, with added indirection. Rejected.
 
 **Positive:**
 - Every routing decision is grounded in validated, schema-conforming data
-- Invalid AI output is immediately visible: logged, fallback fires, alert queued
+- Invalid AI output is immediately visible: logged, fallback fires, alert
+  queued with the specific validation errors in its payload
 - Downstream systems receive only valid data — no defensive validation needed there
-- Every decision — including fallback reason and validation errors — is persisted
-  in SQLite with a run ID for cross-run traceability
+- Every decision is persisted in SQLite with a run ID for cross-run
+  traceability. `validation_passed` records whether the ORIGINAL AI output
+  passed validation, and the original validation errors are stored in the
+  `notes` column. The post-fallback safe default is re-validated as a
+  consistency check but never overwrites the persisted validation result.
 
 **Trade-offs:**
 - Validation adds one pipeline stage (negligible latency — in-process Pydantic check)

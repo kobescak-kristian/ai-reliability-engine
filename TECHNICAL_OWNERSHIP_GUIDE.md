@@ -95,7 +95,9 @@ File: `api.py` — defines all endpoints. Swagger UI at `http://localhost:8000/d
 - Input over 2000 characters — truncated
 - Control characters — removed
 
-Records rejected by the sanitiser never reach the AI call. They are logged and skipped.
+Records rejected by the sanitiser never reach the AI call. They are logged
+and then routed to manual review via the fallback safe default — they still
+receive a decision, a database row, and an alert.
 
 ---
 
@@ -128,7 +130,7 @@ Records rejected by the sanitiser never reach the AI call. They are logged and s
 
 **Strict prompt (used on retry):** A shorter, stricter version of the system prompt (`STRICT_SYSTEM_PROMPT` in `ai_processor.py`) is used when `strict=True` is passed — this is the retry path from `fallback.py`.
 
-**Simulation mode:** When `OPENAI_API_KEY` is not set, `call_openai()` calls `_simulate()` instead of the live API. `_simulate()` returns pre-seeded responses from the `SIMULATED` dict (46 records) and `FORCED_FAILURES` dict (3 records with intentionally invalid outputs).
+**Simulation mode:** When `OPENAI_API_KEY` is not set, `call_openai()` calls `_simulate()` instead of the live API. `_simulate()` returns pre-seeded responses from the `SIMULATED` dict (44 records) and `FORCED_FAILURES` dict (3 records with intentionally invalid outputs). Responses are keyed by lead ID — any record whose ID is not in either dict gets no output, which triggers the fallback path and routes to manual review with the safe default.
 
 **When no API key is present:** `config.simulation_mode()` returns `True`. The full pipeline runs with simulated responses. Every failure mode is demonstrable without a key.
 
@@ -195,9 +197,9 @@ Pipeline trace:
 2. AI Processor: returns `{category: "high_value", confidence: 0.95, reason: "Enterprise demo with confirmed 50k EUR annual budget and C-suite attendance."}`
 3. Validator: all fields valid — passes
 4. Router: `high_value` + `confidence 0.95 ≥ 0.60` → `send_to_sales`
-5. Notify: no alert (not `manual_review`)
-6. Google Sheets: written to Action Queue tab and Sales tab
-7. SQLite: decision persisted with run ID
+5. SQLite: decision persisted with run ID
+6. Notify: no alert (not `manual_review`)
+7. Google Sheets: written to Action Queue tab and Sales History tab
 
 Result: `send_to_sales`. No human intervention required. Decision traceable by lead ID.
 
@@ -221,8 +223,12 @@ Pipeline trace:
 5. Fallback Stage 2: retry fails → safe default assigned:
    `{category: "unknown", confidence: 0.0, reason: "System default — AI output failed validation after retry."}`
 6. Router: `fallback_action == MANUAL_REVIEW_FLAGGED` → `manual_review` (checked before category)
-7. Notify: alert written to `data/alerts.json`; Slack/email dispatched if configured
-8. SQLite: decision persisted with `fallback_action: manual_review_flagged` and `validation_passed: 0`
+7. SQLite: decision persisted with `fallback_action: manual_review_flagged`,
+   `validation_passed: 0`, and the original validation error in `notes`
+   (`Invalid category 'maybe_value' — ...`) — the safe default's own
+   re-validation never overwrites this
+8. Notify: alert written to `data/alerts.json` with the original validation
+   errors in `validation_errors`; Slack/email dispatched if configured
 
 Result: `manual_review`. No invalid output reached operations. Failure is visible, logged, and alerted.
 
@@ -288,7 +294,8 @@ The 51-record simulation in `data/sample_input.json` functions as a manual integ
 - 5 ambiguous/unknown leads (expected: `manual_review`)
 - 5 high-value below confidence threshold (expected: `manual_review`)
 - 3 forced validation failures (expected: fallback → `manual_review`)
-- 3 sanitiser-rejected inputs (expected: no AI call, no routing)
+- 3 sanitiser-rejected inputs (expected: no AI call; routed to
+  `manual_review` via the fallback safe default)
 - Edge cases: gibberish, HTML injection, German input, long input, repeat lead submission
 
 The `FORCED_FAILURES` dict in `pipeline/ai_processor.py` demonstrates that:
@@ -299,10 +306,12 @@ The `FORCED_FAILURES` dict in `pipeline/ai_processor.py` demonstrates that:
 **README claims supported by the simulation:**
 - "Zero invalid AI outputs reached downstream systems" — structurally guaranteed by Pydantic validation + fallback safe default
 - "Every failure routed to a safe handling path" — router's `MANUAL_REVIEW_FLAGGED` branch fires first
-- "Fallback triggered on 3 records" — confirmed by code analysis (input_handler.py moves `_force_invalid` into metadata)
+- "Fallback triggered on 7 records" — confirmed by live run 2026-07-04
+  (3 forced invalid outputs + 4 records with no usable AI response:
+  3 sanitiser-rejected, 1 with no simulation entry)
 
 **Claims that need stronger automated tests:**
-- The fallback count claim (3 records) should be a pytest assertion, not just code analysis
+- The fallback count claim (7 records) should be a pytest assertion, not just a live-run observation
 - The routing table should have unit tests for every branch
 - The sanitiser should have parametric tests for every rejection case
 
