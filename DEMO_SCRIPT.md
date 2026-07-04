@@ -26,7 +26,7 @@ Show that AI output cannot be trusted without a validation and fallback layer, t
 
 ### Step 1 — Explain the problem (2 min)
 
-Open the README. Point to **The Problem With AI in Operations** and **Why Not Just Use Rules?**
+Open the README. Point to **Problem** and **Why Not Just Use Rules?**
 
 Key point to land: AI is probabilistic. It returns wrong categories, out-of-range confidence scores, empty fields. Downstream systems don't self-heal. A validation layer is not optional — it's the difference between a demo and something you can run in production.
 
@@ -50,7 +50,7 @@ Point out: every step is a logged boundary. Nothing is implicit.
 
 Point to `pipeline/ai_processor.py` → `FORCED_FAILURES`. Explain that `lead_037`, `lead_038`, `lead_039` are seeded to return:
 - Invalid category (`maybe_value` — not in the allowed enum)
-- Out-of-range confidence (`1.85`, `-0.3`)
+- Out-of-range confidence (`-0.3`)
 - Empty required field (`reason: ""`)
 
 Run the pipeline and show the console output for these records. Validator catches each failure. Key line: *"Validation failed — triggering fallback."*

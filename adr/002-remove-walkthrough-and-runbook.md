@@ -19,6 +19,9 @@ added before the standard was adopted here.
 A validator (`.githooks/validate_artifacts.py`, run on `pre-push` via
 `core.hooksPath`) now flags either file's existence unless an ADR in this
 folder cites its trigger. No such trigger exists for either file.
+Note: `core.hooksPath` is per-clone local git configuration — it does not
+propagate through `git clone`; each clone must run
+`git config core.hooksPath .githooks` for the hook to fire.
 
 ## Decision
 

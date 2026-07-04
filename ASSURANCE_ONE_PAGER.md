@@ -92,7 +92,7 @@ that is validated, then routed by deterministic rules.
 | Out-of-range confidence | Validator catches → retry → safe default if retry fails |
 | Empty reason field | Validator catches → retry → safe default if retry fails |
 | AI returns None or non-JSON | Treated as validation failure (`errors=["AI returned no output"]`) → fallback |
-| Input rejected by sanitiser | Record logged as rejected; no AI call made; no routing decision |
+| Input rejected by sanitiser | Record logged as rejected; no AI call made; routed to `manual_review` via the fallback safe default (decision, DB row, and alert are still produced) |
 | Safe default assigned | Routes to `manual_review` — never auto-actioned |
 
 No failure mode results in a silent pass-through to operations. Every
@@ -108,7 +108,7 @@ failure is logged, every fallback-flagged record generates an alert.
 | Run ID | Every pipeline invocation generates a unique `run_id`; all decisions in that run share it |
 | Cross-run lead history | `GET /audit/{lead_id}` returns full decision history for one lead across all runs |
 | Alert log | `data/alerts.json` stores all manual review alerts with timestamp, reason, and `status` (pending / acknowledged) |
-| Google Sheets | 4-tab workbook: Action Queue, Sales, Review, Archive; repeat leads detected and flagged automatically |
+| Google Sheets | 4-tab workbook: Action Queue, Sales History, Review History, Archive; repeat leads detected and flagged in the Action Queue (CLI runs with Sheets credentials only) |
 | Aggregate metrics | `GET /stats` returns total processed, decisions by type, fallback count, manual review rate, avg processing time |
 
 ---

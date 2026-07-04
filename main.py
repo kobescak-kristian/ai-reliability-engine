@@ -1,7 +1,7 @@
 """
 AI Reliability Engine — v2.0
 ======================================
-Pipeline: Input → Sanitise → AI → Validate → Fallback → Route → Notify → Sheets → Persist → Output
+Pipeline: Input → Sanitise → AI → Validate → Fallback → Route → Persist → Notify → Sheets → Output
 """
 
 import json
