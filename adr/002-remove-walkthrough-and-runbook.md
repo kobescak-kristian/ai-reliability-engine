@@ -8,7 +8,7 @@
 
 ## Context
 
-This repo adopted ARTIFACT_STANDARD.md (kristian-os, v2.1) for documentation.
+This repo adopted an internal documentation standard, ARTIFACT_STANDARD.md (v2.1), for documentation.
 Under that standard, Tier 0 is the only artifact tier built by default:
 README.md (with problem, solution, system, outcome, and a version-log
 section) plus a capped adr/ folder. SYSTEM_WALKTHROUGH.md and RUNBOOK.md
