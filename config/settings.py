@@ -39,9 +39,28 @@ class Config:
     DB_PATH: Path    = Path(os.getenv("DB_PATH", "data/pipeline.db"))
     ALERTS_PATH: Path = Path(os.getenv("ALERTS_PATH", "data/alerts.json"))
 
+    # Sentinel from .env.example — copying that file verbatim to .env must
+    # still select simulation mode, not a live call with a dead key (audit
+    # pattern (d); sibling fix precedent: Execution a5a9725, Decision f9d3230).
+    PLACEHOLDER_API_KEY = "your_openai_api_key_here"
+
+    @classmethod
+    def _has_live_api_key(cls) -> bool:
+        key = (cls.OPENAI_API_KEY or "").strip()
+        return bool(key) and key != cls.PLACEHOLDER_API_KEY
+
     @classmethod
     def simulation_mode(cls) -> bool:
-        return not bool(cls.OPENAI_API_KEY)
+        return not cls._has_live_api_key()
+
+    @classmethod
+    def simulation_reason(cls) -> str:
+        key = (cls.OPENAI_API_KEY or "").strip()
+        if not key:
+            return "SIMULATION — OPENAI_API_KEY is empty/unset"
+        if key == cls.PLACEHOLDER_API_KEY:
+            return "SIMULATION — OPENAI_API_KEY is still the .env.example placeholder value, not a real key"
+        return "LIVE — OPENAI_API_KEY is configured"
 
     @classmethod
     def sheets_enabled(cls) -> bool:
@@ -52,6 +71,7 @@ class Config:
         return {
             "openai_model":          cls.OPENAI_MODEL,
             "simulation_mode":       cls.simulation_mode(),
+            "simulation_reason":     cls.simulation_reason(),
             "slack_enabled":         cls.SLACK_ENABLED,
             "email_enabled":         cls.EMAIL_ENABLED,
             "sheets_enabled":        cls.sheets_enabled(),

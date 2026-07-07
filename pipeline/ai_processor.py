@@ -126,12 +126,13 @@ FORCED_FAILURES = {
 
 
 def call_openai(record: InputRecord, clean_text: str, strict: bool = False) -> dict | None:
-    if not config.OPENAI_API_KEY:
-        logger.debug(f"Simulation mode for {record.id}")
+    if config.simulation_mode():
+        logger.debug(f"[{record.id}] {config.simulation_reason()} — zero network calls")
         return _simulate(record)
 
+    import openai
+
     try:
-        import openai
         client = openai.OpenAI(api_key=config.OPENAI_API_KEY)
         system = STRICT_SYSTEM_PROMPT if strict else SYSTEM_PROMPT
 
@@ -151,8 +152,16 @@ def call_openai(record: InputRecord, clean_text: str, strict: bool = False) -> d
     except json.JSONDecodeError as e:
         logger.error(f"Non-JSON response for {record.id}: {e}")
         return None
+    except openai.AuthenticationError as e:
+        # Never fold this into ordinary fallback silently — a rejected key
+        # is a configuration failure, not a model output failure.
+        logger.error(f"[{record.id}] OpenAI authentication failed (401) — API key rejected, falling back: {e}")
+        return None
+    except openai.OpenAIError as e:
+        logger.warning(f"[{record.id}] OpenAI call failed (non-auth transport error), falling back: {e}")
+        return None
     except Exception as e:
-        logger.error(f"OpenAI call failed for {record.id}: {e}")
+        logger.error(f"[{record.id}] Unexpected error calling OpenAI, falling back: {e}")
         return None
 
 
