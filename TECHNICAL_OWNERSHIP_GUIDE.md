@@ -183,6 +183,8 @@ All three exhaust the single retry and receive the safe default. This is intenti
 
 ## Worked Examples: Happy Path and Failure Path
 
+The euro figures below are simulation-mode values, not measured business impact.
+
 **Happy Path — `lead_001`**
 
 Input:
