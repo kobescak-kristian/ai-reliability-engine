@@ -14,6 +14,8 @@ ADR cap: 5. Version log lives in README, not a separate file.
   user.email; /home/user/ path or noreply@anthropic.com = cloud
   sandbox = read-only, no pen). Pen check on main at open AND
   immediately before every commit.
+- Never write absolute local paths into tracked files —
+  machine-specific values go to the gitignored local config.
 - Eval discipline: committed gates and results in this repo are
   final records; thresholds are never adjusted after a run, and
   published FAILs stay published. Any new eval cycle freezes its
