@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keyless-eval:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.12', '3.14']
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -r requirements.txt
+      # Keyless simulation mode: no OPENAI_API_KEY in CI, so the pipeline
+      # runs fully offline against the seeded responses. The grep counts
+      # below are frozen from the committed eval evidence (evals/EVAL_RESULTS.md).
+      - name: Run pipeline and assert summary counts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python main.py 2>&1 | tee run.log
+          grep -qF 'Total records   : 51' run.log
+          grep -qF 'FinalDecision.ARCHIVE: 10' run.log
+          grep -qF 'FinalDecision.MANUAL_REVIEW: 19' run.log
+          grep -qF 'FinalDecision.SEND_TO_SALES: 22' run.log
+          grep -qF 'Fallbacks       : 7' run.log
+          grep -qF 'Alerts sent     : 19' run.log
