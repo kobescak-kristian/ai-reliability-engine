@@ -1,5 +1,7 @@
 ﻿# AI Reliability Engine — v2.0
 
+[![CI](https://github.com/kobescak-kristian/ai-reliability-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/kobescak-kristian/ai-reliability-engine/actions/workflows/ci.yml)
+
 ## Problem
 
 AI classification is useful. It is also probabilistic — the 
@@ -150,7 +152,10 @@ Simulation responses are keyed by lead ID: any input the
 simulator does not recognise returns no output, which 
 triggers the fallback path and routes to manual review 
 with the safe default. Classifying new, unseen text 
-requires a live API key.
+requires a live API key. The keyless simulation pipeline 
+runs in CI on every push — Ubuntu, macOS and Windows, 
+Python 3.12 and 3.14 — asserting the committed summary 
+counts.
 
 **Confidence threshold via environment variable:** 
 Configurable per deployment — not hardcoded. Threshold 
