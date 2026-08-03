@@ -1,1 +1,6 @@
-CLAUDE.md | kristian-os, FABLE_QUEUE, GOVERNANCE, FAILURE_REGISTER | 2026-07-12 naming-transparency ruling (ext. 2026-07-14, FABLE_QUEUE); 2026-07-26 exposure-KEPT extension ruling (kristian-os github-ops STATE changelog, Q-58b), names-only
+CLAUDE.md | - Governance home: kristian-os (PRINCIPLES -> GOVERNANCE -> | owner ruling 2026-08-04 (entry-exact migration, canary-resolve-a)
+CLAUDE.md |   FAILURE_REGISTER). Read before any irreversible action. | owner ruling 2026-08-04 (entry-exact migration, canary-resolve-a)
+CLAUDE.md | - Work comes from the governance repo's queue (kristian-os, | owner ruling 2026-08-04 (entry-exact migration, canary-resolve-a)
+CLAUDE.md |   FABLE_QUEUE); do not invent tasks. | owner ruling 2026-08-04 (entry-exact migration, canary-resolve-a)
+# adjudicated-secrets
+pipeline/ai_processor.py |         client = openai.OpenAI(api_key=config.OPENAI_API_KEY) | config/settings.py:16 |     OPENAI_API_KEY: str  = os.getenv("OPENAI_API_KEY", "") | owner ruling 2026-08-04
