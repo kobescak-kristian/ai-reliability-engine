@@ -244,7 +244,7 @@ ai-reliability-engine/
 ├── DEMO_SCRIPT.md           # Walkthrough script for live demos
 ├── TECHNICAL_OWNERSHIP_GUIDE.md # Interview prep + code ownership map
 │
-├── adr/                     # Architecture decision records (capped at 5)
+├── adr/                     # Architecture decision records
 ├── evals/                   # Eval results from live pipeline runs
 ├── .githooks/               # ARTIFACT_STANDARD pre-push validator
 │

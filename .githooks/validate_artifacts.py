@@ -8,8 +8,28 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".")
 REQUIRED_README_SECTIONS = ["## Problem", "## Solution", "## System", "## Outcome", "## Version Log"]
 BANNED_WITHOUT_TRIGGER = ["SYSTEM_WALKTHROUGH.md", "CHANGELOG.md", "RUNBOOK.md",
                           "PRODUCTION_READINESS.md", "THREAT_MODEL.md", "MONITORING.md",
-                          "INCIDENT_RESPONSE.md", "TEST_MATRIX.md"]
+                          "INCIDENT_RESPONSE.md", "TEST_MATRIX.md",
+                          "DEMO_SCRIPT.md", "ASSURANCE_ONE_PAGER.md",
+                          "TECHNICAL_OWNERSHIP_GUIDE.md",
+                          # Propagated 2026-09-19 (Q-72(f) validator convergence):
+                          # was canonical + sentinel only as of 2026-08-04; this
+                          # repo's live-file precondition (no uncited root file
+                          # under any of these six names) was checked and is clear.
+                          "SLO.md", "MODEL_CARD.md", "DATA_CONTRACT.md",
+                          "DATA_RETENTION_POLICY.md", "SYSTEM_CARD.md", "SPEC.md"]
+# Tier 1 artifacts (ARTIFACT_STANDARD.md #Tier 1) are allowed without an ADR
+# trigger only for the current flagship — exactly one at a time. Propagated
+# 2026-09-19 (Q-72(f)): this repo IS the flagship and already carries these
+# three as governed reviewer artifacts (AGENTS.md constraint 10); the local
+# validator previously had no TIER1_ARTIFACTS handling at all.
+TIER1_ARTIFACTS = {"DEMO_SCRIPT.md", "ASSURANCE_ONE_PAGER.md", "TECHNICAL_OWNERSHIP_GUIDE.md"}
+CURRENT_FLAGSHIP = "ai-reliability-engine"
+IS_FLAGSHIP = ROOT.resolve().name == CURRENT_FLAGSHIP
 errors = []
+
+# Build-repo STATE rule: STATE.md is part of the scaffold.
+if not (ROOT / "STATE.md").exists():
+    errors.append("STATE.md missing (Build-repo STATE rule)")
 
 readme = ROOT / "README.md"
 if not readme.exists():
@@ -37,7 +57,8 @@ else:
             errors.append(f"AGENTS.md missing section: ## {heading}")
 
 # Decision-record requirement: adr/ and decisions/ both satisfy it —
-# a repo may use either name for its decision-record folder.
+# a repo may use either name for its decision-record folder. No hard
+# maximum (ARTIFACT_STANDARD v2.6, 2026-08-20 ADR-cap-removal ruling).
 adr = ROOT / "adr"
 decisions = ROOT / "decisions"
 decision_dirs = [d for d in (adr, decisions) if d.is_dir()]
@@ -48,12 +69,12 @@ else:
                        if "template" not in f.name.lower()]
     count = len(decision_files)
     if count == 0:
-        errors.append("adr/ (or decisions/) has no decisions (need 1-5)")
-    elif count > 5:
-        errors.append(f"adr/ (or decisions/) has {count} decisions (cap is 5 - decisions were not decisions)")
+        errors.append("adr/ (or decisions/) has no decisions (need at least 1)")
 
 for banned in BANNED_WITHOUT_TRIGGER:
     if (ROOT / banned).exists():
+        if banned in TIER1_ARTIFACTS and IS_FLAGSHIP:
+            continue
         # allowed only if a decision-record file mentions it (the trigger record)
         justified = any(
             re.search(re.escape(banned), f.read_text(encoding="utf-8"))
