@@ -11,7 +11,7 @@ BANNED_WITHOUT_TRIGGER = ["SYSTEM_WALKTHROUGH.md", "CHANGELOG.md", "RUNBOOK.md",
                           "INCIDENT_RESPONSE.md", "TEST_MATRIX.md",
                           "DEMO_SCRIPT.md", "ASSURANCE_ONE_PAGER.md",
                           "TECHNICAL_OWNERSHIP_GUIDE.md",
-                          # Propagated 2026-09-19 (Q-72(f) validator convergence):
+                          # Propagated 2026-09-19 (validator convergence):
                           # was canonical + sentinel only as of 2026-08-04; this
                           # repo's live-file precondition (no uncited root file
                           # under any of these six names) was checked and is clear.
@@ -19,7 +19,7 @@ BANNED_WITHOUT_TRIGGER = ["SYSTEM_WALKTHROUGH.md", "CHANGELOG.md", "RUNBOOK.md",
                           "DATA_RETENTION_POLICY.md", "SYSTEM_CARD.md", "SPEC.md"]
 # Tier 1 artifacts (ARTIFACT_STANDARD.md #Tier 1) are allowed without an ADR
 # trigger only for the current flagship — exactly one at a time. Propagated
-# 2026-09-19 (Q-72(f)): this repo IS the flagship and already carries these
+# 2026-09-19: this repo IS the flagship and already carries these
 # three as governed reviewer artifacts (AGENTS.md constraint 10); the local
 # validator previously had no TIER1_ARTIFACTS handling at all.
 TIER1_ARTIFACTS = {"DEMO_SCRIPT.md", "ASSURANCE_ONE_PAGER.md", "TECHNICAL_OWNERSHIP_GUIDE.md"}
