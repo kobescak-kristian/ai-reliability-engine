@@ -1,4 +1,5 @@
 # STATE — ai-reliability-engine
+- STATUS: ACTIVE
 
 **Classification:** PROJECT · T0 · **Flagship** (canonical validator's `CURRENT_FLAGSHIP`; `domains/github-ops/STATE.md` Engine Status table).
 
@@ -36,3 +37,15 @@
 ## Open loops
 
 None on disk.
+
+## Backlog (KOS unit records; Target KOS 06 §D, GOVERNANCE §9)
+
+Rows are read by the KOS computed view (`python core/kos_core.py index
+--view` in kristian-os). An AUTH row authorizes B1 work on this unit and
+is owner-written (program stage U-02 lands the first one); DRAFT rows are
+proposals; DONE rows keep history. The `- STATUS:` line at the top of
+this file is the unit status the view renders (ACTIVE | BLOCKED |
+DORMANT).
+
+| ID | Auth | Title | Date |
+|---|---|---|---|
