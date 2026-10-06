@@ -1,0 +1,38 @@
+# verdict-bound-head — control package member, installed as
+# .github/workflows/verdict-bound-head.yml and verified by sha256 against the
+# package manifest. Runs from the BASE branch (pull_request_target, and
+# issue_comment, which always uses the default branch), checks out no pull
+# request code and runs no pull request input. Posts the commit status
+# `verdict-bound-head` on the current pull request head: success only while
+# the head equals the SHA in the latest "REVIEW-VERDICT: VERIFIED <sha>" comment
+# written by the repository owner, a member or a collaborator. No actions
+# are used (the runner's gh CLI); the token holds only the permissions below.
+name: verdict-bound-head
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+permissions:
+  statuses: write
+  pull-requests: read
+  issues: read
+  contents: read
+jobs:
+  bind-verdict:  # job name differs from the status context, so the required context is the status alone
+    if: github.event_name == 'pull_request_target' || github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    steps:
+      - name: bind reviewed SHA to current head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number || github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          head=$(gh api "repos/$REPO/pulls/$PR" --jq .head.sha)
+          verdict=$(gh api "repos/$REPO/issues/$PR/comments" --paginate --jq '.[] | select(.author_association == "OWNER" or .author_association == "MEMBER" or .author_association == "COLLABORATOR") | .body | capture("REVIEW-VERDICT: VERIFIED (?<sha>[0-9a-f]{40})")? | .sha' | tail -n 1 || true)
+          if [ -n "$verdict" ] && [ "$verdict" = "$head" ]; then state=success; desc="head == reviewed ${verdict:0:12}"; else state=failure; desc="head ${head:0:12} != reviewed ${verdict:-none}"; fi
+          echo "$desc"
+          gh api -X POST "repos/$REPO/statuses/$head" -f state="$state" -f context=verdict-bound-head -f description="$desc" > /dev/null
+          [ "$state" = success ]
