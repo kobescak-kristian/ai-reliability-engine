@@ -11,17 +11,12 @@ BANNED_WITHOUT_TRIGGER = ["SYSTEM_WALKTHROUGH.md", "CHANGELOG.md", "RUNBOOK.md",
                           "INCIDENT_RESPONSE.md", "TEST_MATRIX.md",
                           "DEMO_SCRIPT.md", "ASSURANCE_ONE_PAGER.md",
                           "TECHNICAL_OWNERSHIP_GUIDE.md",
-                          # Propagated 2026-09-19 (validator convergence):
-                          # was canonical + sentinel only as of 2026-08-04; this
-                          # repo's live-file precondition (no uncited root file
-                          # under any of these six names) was checked and is clear.
+                          # Added 2026-08-04: canonical + sentinel copies only, scoped
+                          # by owner ruling.
                           "SLO.md", "MODEL_CARD.md", "DATA_CONTRACT.md",
                           "DATA_RETENTION_POLICY.md", "SYSTEM_CARD.md", "SPEC.md"]
 # Tier 1 artifacts (ARTIFACT_STANDARD.md #Tier 1) are allowed without an ADR
-# trigger only for the current flagship — exactly one at a time. Propagated
-# 2026-09-19: this repo IS the flagship and already carries these
-# three as governed reviewer artifacts (AGENTS.md constraint 10); the local
-# validator previously had no TIER1_ARTIFACTS handling at all.
+# trigger only for the current flagship — exactly one at a time.
 TIER1_ARTIFACTS = {"DEMO_SCRIPT.md", "ASSURANCE_ONE_PAGER.md", "TECHNICAL_OWNERSHIP_GUIDE.md"}
 CURRENT_FLAGSHIP = "ai-reliability-engine"
 IS_FLAGSHIP = ROOT.resolve().name == CURRENT_FLAGSHIP
@@ -57,8 +52,7 @@ else:
             errors.append(f"AGENTS.md missing section: ## {heading}")
 
 # Decision-record requirement: adr/ and decisions/ both satisfy it —
-# a repo may use either name for its decision-record folder. No hard
-# maximum (ARTIFACT_STANDARD v2.6, 2026-08-20 ADR-cap-removal ruling).
+# a repo may use either name for its decision-record folder.
 adr = ROOT / "adr"
 decisions = ROOT / "decisions"
 decision_dirs = [d for d in (adr, decisions) if d.is_dir()]
