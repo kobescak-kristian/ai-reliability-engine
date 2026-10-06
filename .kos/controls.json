@@ -1,5 +1,5 @@
 {
-  "control_version": "1.1",
+  "control_version": "1.4",
   "repo_class": "PUBLIC-DESTINATION",
   "classes": {
     "C1": [
@@ -26,6 +26,7 @@
     "kos-controls.yml",
     "pre-commit",
     "pre-push",
-    "validate_artifacts.py"
+    "validate_artifacts.py",
+    "verdict-bound-head.yml"
   ]
 }
