@@ -22,9 +22,12 @@ Where authority lives:
     the fallback sequence.
   - `adr/002-remove-walkthrough-and-runbook.md`: removal of the walkthrough and runbook,
     and where their explanatory content was retained.
+  - `adr/003-system-card-replaces-assurance-one-pager.md`: the system card that replaced
+    the assurance one-pager, and which claims were carried over.
 - `TECHNICAL_OWNERSHIP_GUIDE.md`: detailed design and code-ownership explanation for
   technical review.
-- `ASSURANCE_ONE_PAGER.md`: assurance controls and risk summary.
+- `SYSTEM_CARD.md`: scope, controls, evaluation figures, risks and limits (figures carry
+  `FIG:` source lines).
 - `evals/EVAL_RESULTS.md`: committed, measured evaluation evidence.
 - The affected source files and `config/settings.py`: actual implementation behaviour.
 - `.github/workflows/ci.yml`: the current automated verification path.
@@ -57,7 +60,7 @@ Starting points, not complete inventories:
 | Manual-review notifications (alert queue, Slack, email) | `utils/notifier.py` |
 | Google Sheets CRM integration | `utils/sheets.py` |
 | Evaluation evidence | `evals/EVAL_RESULTS.md`, `.github/workflows/ci.yml` |
-| Assurance and technical ownership | `ASSURANCE_ONE_PAGER.md`, `TECHNICAL_OWNERSHIP_GUIDE.md` |
+| Assurance and technical ownership | `SYSTEM_CARD.md`, `TECHNICAL_OWNERSHIP_GUIDE.md` |
 | Material decisions | `adr/` |
 | Documentation and artifact validation | the affected artifact, `.githooks/validate_artifacts.py` |
 | CI, hooks, publishing | `.github/workflows/ci.yml`, `.githooks/`, `.publicgate-allow` |
@@ -104,7 +107,7 @@ Evidence and history:
 Artifacts and files:
 
 10. **Preserve the existing reviewer artifacts.**
-    `ASSURANCE_ONE_PAGER.md`, `DEMO_SCRIPT.md`, and
+    `SYSTEM_CARD.md`, `DEMO_SCRIPT.md`, and
     `TECHNICAL_OWNERSHIP_GUIDE.md` are legitimate governed artifacts in
     this repository. Do not remove, duplicate, regenerate, or demote them
     unless a separately authorized task requires it. Do not copy their
