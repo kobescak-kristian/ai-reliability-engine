@@ -20,6 +20,7 @@
 | v2.0 | 2026-07-04 | Removed SYSTEM_WALKTHROUGH.md and RUNBOOK.md per ARTIFACT_STANDARD v2.1 (ADR-002); traces merged into TECHNICAL_OWNERSHIP_GUIDE |
 | v2.0 | 2026-07-04 | Audit remediation: fix validation-result persistence, Windows console encoding, sanitiser ordering, Sheets RAW writes; docs re-derived from live run |
 | v2.0 | 2026-10-04 | Unit tests: 23 pytest functions (31 cases) over validator, router and fallback, run in CI as a second job beside the unchanged keyless eval |
+| v2.0 | 2026-10-07 | SYSTEM_CARD.md replaces ASSURANCE_ONE_PAGER.md (ADR-003); headline figures carry source lines checked at publication |
 
 ## Build history since the Version Log's last entry (from `git log --reverse`)
 
@@ -34,6 +35,7 @@
 - **2026-09-19** (`c227227`) — STATE.md added (this file); validator gains a STATE.md-existence check, the obsolete 5-record decision cap is removed, and flagship/Tier-1 handling (`TIER1_ARTIFACTS`, `CURRENT_FLAGSHIP`/`IS_FLAGSHIP`) is added to this repo's own local validator copy, mirroring canonical, since this repo *is* the flagship and already carries `ASSURANCE_ONE_PAGER.md`/`TECHNICAL_OWNERSHIP_GUIDE.md`/`DEMO_SCRIPT.md` as governed reviewer artifacts (`AGENTS.md` constraint 10) the local validator previously didn't recognize at all. README's stale "(capped at 5)" repository-tree wording corrected in the same commit.
 - **2026-10-04** — Unit-test suite: 23 pytest functions (31 cases with parametrization) in `tests/` over `pipeline/validator.py`, `pipeline/router.py` and `pipeline/fallback.py`; keyless by construction (`tests/conftest.py` forces an empty `OPENAI_API_KEY`; the fallback tests replace the model call). CI runs them as a second job (`unit-tests`, same 3-OS x 2-Python matrix) beside the unchanged keyless eval job, and now also runs on pull requests to main. Internal planning labels removed from this file and from two comments in `.githooks/validate_artifacts.py` (comments only).
 - **2026-10-07** — Exact dependency pins: the nine direct dependencies in `requirements.txt` changed from `>=` floors to `==` pins at the versions CI already installed on every OS and Python leg (pydantic 2.13.5, python-dotenv 1.2.4, fastapi 0.142.2, uvicorn[standard] 0.54.0, openai 3.26.0, httpx 0.28.1, pytest 9.1.1, gspread 6.2.1, google-auth 2.60.0). No version changed what CI runs; transitive dependencies are not pinned.
+- **2026-10-07** — `SYSTEM_CARD.md` added at the repository root (16-block template; every headline figure on a `FIG:` line with its source file) and `ASSURANCE_ONE_PAGER.md` retired, with the decision and the carried-over claims recorded in `adr/003-system-card-replaces-assurance-one-pager.md`; `AGENTS.md`, the README tree and Version Log updated. The one-pager's "no automated tests" statement was not carried (tests exist since 2026-10-04).
 
 ## Open loops
 

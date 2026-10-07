@@ -226,6 +226,7 @@ Complete — v2.0
 | v2.0 | 2026-07-04 | Removed SYSTEM_WALKTHROUGH.md and RUNBOOK.md per ARTIFACT_STANDARD v2.1 (ADR-002); traces merged into TECHNICAL_OWNERSHIP_GUIDE |
 | v2.0 | 2026-07-04 | Audit remediation: fix validation-result persistence, Windows console encoding, sanitiser ordering, Sheets RAW writes; docs re-derived from live run |
 | v2.0 | 2026-10-04 | Unit tests: 23 pytest functions (31 cases) over validator, router and fallback, run in CI as a second job beside the unchanged keyless eval |
+| v2.0 | 2026-10-07 | SYSTEM_CARD.md replaces ASSURANCE_ONE_PAGER.md (ADR-003); headline figures carry source lines checked at publication |
 
 ## Repository Structure
 
@@ -241,7 +242,7 @@ ai-reliability-engine/
 ├── architecture_v2.png          # Business/executive architecture overview
 ├── architecture-v2-diagram.png  # Detailed technical architecture
 │
-├── ASSURANCE_ONE_PAGER.md   # AI risk/assurance summary for reviewers
+├── SYSTEM_CARD.md           # System card: scope, controls, figures, risks, limits
 ├── DEMO_SCRIPT.md           # Walkthrough script for live demos
 ├── TECHNICAL_OWNERSHIP_GUIDE.md # Interview prep + code ownership map
 │
