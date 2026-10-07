@@ -167,6 +167,8 @@ FIG: MAX_RETRIES = 1 | SOURCE: pipeline/fallback.py
 - SQLite only; spreadsheet writes can hit API rate limits on large
   batches; the API path skips the spreadsheet write.
 - No data retention or deletion policy is defined.
+- No input schema versioning: the optional `metadata` field on an input
+  record is an unvalidated dict (`models/schemas.py`, `api.py`).
 
 ## 12. Failure modes and risks
 

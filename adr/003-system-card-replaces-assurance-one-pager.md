@@ -31,8 +31,10 @@ was re-checked against the code at the starting revision:
 - Carried into the card (sections 6, 11, 12, 13 and 14): purpose and
   intended use, the model role and temperature, the deterministic
   controls, human oversight points, failure handling, the audit trail,
-  the privacy notes, the production gaps, and each risk-register row
-  whose mitigation the code still shows.
+  the privacy notes, the production gaps (the missing pipeline health
+  monitoring is listed in section 16, since the system is not
+  deployed), and each risk-register row whose mitigation the code still
+  shows.
 - Not carried: the statement that no automated tests exist (false since
   2026-10-04), commit-level remediation detail that belongs to history,
   and rating rows marked TODO with no assessment behind them.
