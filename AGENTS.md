@@ -11,6 +11,8 @@ AI output against a strict schema, applies a bounded fallback when output is inv
 unavailable, routes uncertain and fallback cases to manual review, persists every decision
 to an audit trail, and feeds decisions into notification and CRM integration paths.
 
+Classification: PROJECT.
+
 ## Authority and conflict handling
 
 Where authority lives:
