@@ -223,7 +223,7 @@ Complete — v2.0
 | v2.0 | 2026-04-23 | Architecture diagrams and repository structure documented |
 | v2.0 | 2026-06-17 | System Context expanded to five-engine system |
 | v2.0 | 2026-06-19 | Added ADR-001, eval results, assurance one-pager, runbook |
-| v2.0 | 2026-07-04 | Removed SYSTEM_WALKTHROUGH.md and RUNBOOK.md per ARTIFACT_STANDARD v2.1 (ADR-002); traces merged into TECHNICAL_OWNERSHIP_GUIDE |
+| v2.0 | 2026-07-04 | Removed SYSTEM_WALKTHROUGH.md and RUNBOOK.md (ADR-002) |
 | v2.0 | 2026-07-04 | Audit remediation: fix validation-result persistence, Windows console encoding, sanitiser ordering, Sheets RAW writes; docs re-derived from live run |
 | v2.0 | 2026-10-04 | Unit tests: 23 pytest functions (31 cases) over validator, router and fallback, run in CI as a second job beside the unchanged keyless eval |
 | v2.0 | 2026-10-07 | SYSTEM_CARD.md replaces ASSURANCE_ONE_PAGER.md (ADR-003); headline figures carry source lines checked at publication |
@@ -244,7 +244,6 @@ ai-reliability-engine/
 │
 ├── SYSTEM_CARD.md           # System card: scope, controls, figures, risks, limits
 ├── DEMO_SCRIPT.md           # Walkthrough script for live demos
-├── TECHNICAL_OWNERSHIP_GUIDE.md # Interview prep + code ownership map
 │
 ├── adr/                     # Architecture decision records
 ├── evals/                   # Eval results from live pipeline runs
