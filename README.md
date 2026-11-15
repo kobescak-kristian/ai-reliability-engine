@@ -2,6 +2,10 @@
 
 [![CI](https://github.com/kobescak-kristian/ai-reliability-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/kobescak-kristian/ai-reliability-engine/actions/workflows/ci.yml)
 
+Prevents incorrect AI decisions from impacting workflows by validating and controlling outputs before execution.
+
+**Status:** Built, 2026-10-07. v2.0.
+
 ## Problem
 
 AI classification is useful. It is also probabilistic — the 
@@ -189,6 +193,40 @@ business workflows.
 
 - **[AI Decision Engine](https://github.com/kobescak-kristian/ai-decision-engine)** — generates structured decisions that this system validates and routes
 
+## Run it
+
+Requirements: Python 3.12 or newer (CI runs 3.12 and 3.14).
+
+```bash
+python -m venv .venv
+.venv/Scripts/activate   # or: source .venv/bin/activate  (macOS/Linux)
+pip install -r requirements.txt
+```
+
+**Run the pipeline** on the 51 sample records in `data/sample_input.json`:
+
+```bash
+python main.py
+```
+
+Without an `OPENAI_API_KEY` the pipeline runs in keyless simulation mode with seeded
+responses. This is the path CI checks on every push: 51 records, 22 sent to sales, 19 to
+manual review, 10 archived, 7 fallbacks. To call the model instead, copy `.env.example` to
+`.env` and set `OPENAI_API_KEY`. Slack, e-mail and Google Sheets are optional; their settings
+are read in `config/settings.py`.
+
+**Start the API** (endpoints in the table above):
+
+```bash
+uvicorn api:app --reload --port 8000
+```
+
+**Unit tests** (keyless; validator, router and fallback):
+
+```bash
+python -m pytest tests/ -v
+```
+
 ## Known Limitations
 **Single retry:** No exponential backoff — one retry only.
 
@@ -219,14 +257,14 @@ Complete — v2.0
 
 | Version | Date | Change |
 |---|---|---|
-| v2.0 | 2026-04-22 | Initial release — 8-stage pipeline, validation, fallback, routing, Sheets CRM, Slack/email alerts |
-| v2.0 | 2026-04-23 | Architecture diagrams and repository structure documented |
-| v2.0 | 2026-06-17 | System Context expanded to five-engine system |
-| v2.0 | 2026-06-19 | Added ADR-001, eval results, assurance one-pager, runbook |
-| v2.0 | 2026-07-04 | Removed SYSTEM_WALKTHROUGH.md and RUNBOOK.md (ADR-002) |
-| v2.0 | 2026-07-04 | Audit remediation: fix validation-result persistence, Windows console encoding, sanitiser ordering, Sheets RAW writes; docs re-derived from live run |
-| v2.0 | 2026-10-04 | Unit tests: 23 pytest functions (31 cases) over validator, router and fallback, run in CI as a second job beside the unchanged keyless eval |
 | v2.0 | 2026-10-07 | SYSTEM_CARD.md replaces ASSURANCE_ONE_PAGER.md (ADR-003); headline figures carry source lines checked at publication |
+| v2.0 | 2026-10-04 | Unit tests: 23 pytest functions (31 cases) over validator, router and fallback, run in CI as a second job beside the unchanged keyless eval |
+| v2.0 | 2026-07-04 | Audit remediation: fix validation-result persistence, Windows console encoding, sanitiser ordering, Sheets RAW writes; docs re-derived from live run |
+| v2.0 | 2026-07-04 | Removed SYSTEM_WALKTHROUGH.md and RUNBOOK.md (ADR-002) |
+| v2.0 | 2026-06-19 | Added ADR-001, eval results, assurance one-pager, runbook |
+| v2.0 | 2026-06-17 | System Context expanded to five-engine system |
+| v2.0 | 2026-04-23 | Architecture diagrams and repository structure documented |
+| v2.0 | 2026-04-22 | Initial release — 8-stage pipeline, validation, fallback, routing, Sheets CRM, Slack/email alerts |
 
 ## Repository Structure
 
@@ -247,7 +285,7 @@ ai-reliability-engine/
 │
 ├── adr/                     # Architecture decision records
 ├── evals/                   # Eval results from live pipeline runs
-├── .githooks/               # ARTIFACT_STANDARD pre-push validator
+├── .githooks/               # Pre-push documentation check
 │
 ├── config/
 │   └── settings.py          # Thresholds, credentials, and runtime configuration
@@ -288,3 +326,7 @@ Part of a five-engine AI decision system:
 - **[AI Context Engine](https://github.com/kobescak-kristian/ai-context-engine)** - grounds decisions in retrieved precedent and explains them
 
 Complete system: validation → evaluation → financial impact → grounded explanation → execution
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE).
