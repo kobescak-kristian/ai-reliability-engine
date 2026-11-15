@@ -6,7 +6,7 @@ Show that AI output cannot be trusted without a validation and fallback layer, t
 
 ## 2. Target Audience
 
-- Hiring managers and technical recruiters evaluating AI systems competency
+- Engineers evaluating how AI output is checked before it is used
 - Technical reviewers assessing production readiness and engineering judgment
 - Operations stakeholders who want to understand how AI is made safe for business workflows
 
